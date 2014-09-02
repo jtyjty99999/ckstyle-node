@@ -4,7 +4,7 @@ var Class = base.Class
 var RuleChecker = base.RuleChecker
 var helper = require('./helper');
 
-var pattern_unit = /\s(0\s*[\w]+)/g
+var pattern_unit = /^[0]+[\w]+/g
 var replacer_unit = /,\s+/g
 
 module.exports = global.FEDNoUnitAfterZero = new Class(RuleChecker, function() {
@@ -71,7 +71,6 @@ module.exports = global.FEDNoUnitAfterZero = new Class(RuleChecker, function() {
 
             collector.push(finalV)
         })
-            
 
         rule.fixedValue = collector.join(' ').replace(replacer_unit, ', ')
     }

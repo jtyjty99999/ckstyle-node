@@ -6,6 +6,39 @@ exports.heredoc = function(fn) {
         .replace(/[\s\xA0]+$/, "");
 };
 
+
+function len(arr) {
+    return arr.length;
+}
+exports.len = len;
+
+function str(num) {
+    return '' + num;
+}
+exports.str = str;
+
+function startswith(str, pattern) {
+    return str.indexOf(pattern) == 0;
+}
+exports.startswith = startswith;
+
+function endswith(str, pattern) {
+    if (str.length < pattern.length) {
+        return false;
+    }
+    return str.slice(pattern.length * -1) == pattern;
+}
+exports.endswith = endswith;
+
+function times(str, time) {
+    var collector = '';
+    for(var i = 0; i < time; i++) {
+        collector += str;
+    }
+    return collector;
+}
+exports.times = times;
+
 exports.isFontFamilyName = function(font) {
     font = font.toLowerCase()
     var added = "," + font + ","
@@ -31,24 +64,24 @@ exports.containsHack = containsHack;
 
 function getAttrOrder(attr, strippedName) {
     if (attr in cssAttrOrders)
-        return cssAttrOrders[attr] + addCss3PrefixValue(strippedName)
+        return cssAttrOrders[attr] + getCss3PrefixValue(strippedName)
     if (attr.indexOf('-') != -1) {
         var splited = attr.split('-')
         var tmp = splited[0] + '-' + splited[len(splited) - 1]
         if (tmp in cssAttrOrders)
-            return cssAttrOrders[tmp] + addCss3PrefixValue(strippedName)
+            return cssAttrOrders[tmp] + getCss3PrefixValue(strippedName)
         while (len(splited) != 0) {
             splited = splited.slice(0, -1);
             tmp = splited.join('-')
             if (tmp in cssAttrOrders)
-                return cssAttrOrders[tmp] + addCss3PrefixValue(strippedName)
+                return cssAttrOrders[tmp] + getCss3PrefixValue(strippedName)
         }
     }
-    return 6000 + addCss3PrefixValue(strippedName)
+    return 6000 + getCss3PrefixValue(strippedName)
 }
 exports.getAttrOrder = getAttrOrder
 
-function addCss3PrefixValue(attr) {
+function getCss3PrefixValue(attr) {
     var value = 0
     if (attr.indexOf('-webkit') == 0)
         value = value - 5
@@ -62,6 +95,7 @@ function addCss3PrefixValue(attr) {
         value = value - 1
     return value
 }
+exports.getCss3PrefixValue = getCss3PrefixValue;
 
 function isHTMLTag(tag) {
     return containsInArray(validHTMLTags, tag)
@@ -166,7 +200,7 @@ for(var key in cssAttrOrdersMap) {
     var value = cssAttrOrdersMap[key];
     counter = 0;
     value.forEach(function(x) {
-        cssAttrOrders[x] = key + counter
+        cssAttrOrders[x] = parseInt(key) + counter
         counter = counter + 6
     })
 }

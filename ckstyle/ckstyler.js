@@ -1,5 +1,4 @@
 var fs = require('fs');
-var path = require('path');
 var CSSParser = require('./parser/index').CSSParser;
 
 var base = require('./base');
@@ -254,7 +253,7 @@ var CssChecker = new Class(function() {
     this.doCompress = function(self, browser) {
         browser = browser || ALL;
         self.config._curBrowser = browser
-        self.doFix()
+        self.doFix(browser)
         return self.getStyleSheet().compress(browser).trim()
     }
 
@@ -419,7 +418,7 @@ var CssChecker = new Class(function() {
                 if (!result) {
                     self.logStyleSheetMessage(checker, styleSheet)
                 }
-            } else if (isList(result) && len(result) != 0) {
+            } else if (isList(result) && result.length != 0) {
                 self.logStyleSheetMessage(checker, styleSheet, result)
             } else {
                 console.error('check should be boolean/list, ' + checker.id + ' is not.')

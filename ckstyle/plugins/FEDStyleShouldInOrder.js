@@ -5,7 +5,7 @@ var RuleSetChecker = base.RuleSetChecker
 var helper = require('./helper');
 
 module.exports = global.FEDStyleShouldInOrder = new Class(RuleSetChecker, function() {
-    
+
     this.__init__ = function(self) {
         self.id = 'keep-in-order'
         self.errorLevel = ERROR_LEVEL.WARNING
@@ -19,7 +19,7 @@ module.exports = global.FEDStyleShouldInOrder = new Class(RuleSetChecker, functi
             return true
 
         var order = self._generateNameOrderMapping(rules)
-        length = len(order)
+        length = helper.len(order)
         for(var i = 0; i < order.length; i++) {
             if (i == length - 1)
                 break
@@ -40,7 +40,12 @@ module.exports = global.FEDStyleShouldInOrder = new Class(RuleSetChecker, functi
             return true
 
         function comp(a, b) {
-            return a[0] - b[0]
+            if (a[0] != b[0]) {
+                return a[0] - b[0]
+            }
+            var a1 = a[1].fixedValue
+            var b1 = b[1].fixedValue
+            return helper.getCss3PrefixValue(a1) - helper.getCss3PrefixValue(b1)
         }
 
         var mapping = self._generateNameRuleMapping(rules)
@@ -49,7 +54,6 @@ module.exports = global.FEDStyleShouldInOrder = new Class(RuleSetChecker, functi
         for(var i = 0; i < mapping.length; i++) {
             sortedRules.push(mapping[i][1])
         }
-            
         ruleSet.setRules(sortedRules)
     }
 

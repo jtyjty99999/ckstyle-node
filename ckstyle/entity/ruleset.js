@@ -1,6 +1,7 @@
 var helper = require('./entityutil');
 var Cleaner = helper.Cleaner;
-var ALL = helper.ALL;
+var doRuleSetDetect = require('../browsers/Hacks').doRuleSetDetect
+var ALL = require('../browsers/BinaryRule').ALL
 
 var Rule = require('./rule');
 
@@ -23,7 +24,7 @@ function RuleSet(selector, values, comment, styleSheet) {
 
     self.singleLineFlag = (self.roughValue.split('\n').length == 1)
 
-    self.browser = ALL
+    self.browser = doRuleSetDetect(self.roughSelector)
     self.toBeUsed = {}
 }
 
@@ -87,7 +88,10 @@ RuleSet.prototype.compressRules = function(browser) {
 RuleSet.prototype.compress = function(browser) {
     var self = this;
     browser = browser || ALL;
-    if (self.browser && !(self.browser & browser))
+    if (!self.browser) {
+        return '';
+    }
+    if (!(self.browser & browser))
         return ''
     var result = self.fixedSelector || self.selector;
     if (result.indexOf(',') != -1) {
@@ -207,7 +211,7 @@ RuleSet.prototype.existNames = function(name) {
         var name = names[i];
         name = name.trim()
         for(var j = 0; j < self._rules.length; j++) {
-            var rule = self._rules[i]
+            var rule = self._rules[j]
             if (rule.name == name) {
                 return true;
             }
@@ -227,7 +231,7 @@ RuleSet.prototype.existRoughNames = function(name) {
         var name = names[i];
         name = name.trim()
         for(var j = 0; j < self._rules.length; j++) {
-            var rule = self._rules[i]
+            var rule = self._rules[j]
             if (rule.strippedName == name) {
                 return true;
             }

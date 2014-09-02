@@ -1,7 +1,7 @@
 var fs = require('fs');
 var pathm = require('path');
 
-var CssParser = require('./parser').CSSParser
+var CssParser = require('./parser/index').CSSParser
 var CssChecker = require('./ckstyler').CssChecker
 var args = require('./command/args');
 
@@ -112,3 +112,4 @@ function compressDirRecursively(directory, config) {
 }
 
 exports.doCompress = doCompress;
+exports.prepare = prepare
